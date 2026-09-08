@@ -1,6 +1,8 @@
+using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 /*
  * GameManager owns the local match rules: scoring, win checks, and ball resets.
@@ -24,8 +26,8 @@ public class GameManager : NetworkBehaviour
 
     void Start()
     {
-        UpdateScore();
-        StartGame();
+        UpdateScoreRpc();
+        // StartGame();
     }
 
     public void StartGame()
@@ -59,13 +61,25 @@ public class GameManager : NetworkBehaviour
                 ResetBall(-1f);
         }
 
-        UpdateScore();
+        UpdateScoreRpc();
     }
 
-    void UpdateScore()
+    [Rpc(SendTo.Everyone)]
+    void UpdateScoreRpc(RpcParams rpcParams = default)
     {
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
+        if (senderClientId != NetworkObject.OwnerClientId)
+        {
+            return;
+        }
+        
         rightPlayerScoreText.text = _rightPlayerScore.Value.ToString();
         leftPlayerScoreText.text = _leftPlayerScore.Value.ToString();
+    }
+
+    private void LateUpdate()
+    {
+        UpdateScoreRpc();
     }
 
     void ResetBall(float directionSign)

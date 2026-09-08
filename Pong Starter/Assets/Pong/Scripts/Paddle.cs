@@ -27,6 +27,7 @@ public class Paddle : NetworkBehaviour
     [SerializeField] float maxTravelZ;
     [SerializeField] float speed;
     [SerializeField] float collisionBallSpeedUp = 1.5f;
+    [SerializeField] private GameObject gameManager;
     
     // Local two-player needs separate keys per paddle. InputSystem_Actions
     // already has a Player/Paddle axis (W/S) for the one-owner step.
@@ -37,7 +38,7 @@ public class Paddle : NetworkBehaviour
     const float LeftX = -7.5f;
     const float RightX = 7.5f;
 
-    private void OnServerInitialized()
+    private void Start()
     {
         ApplySidePosition();
     }
@@ -46,6 +47,11 @@ public class Paddle : NetworkBehaviour
     void ApplySidePosition()
     {
 
+        if (OwnerClientId > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
         if (IsOwner)
         {
             float x = (OwnerClientId == 0) ? LeftX : RightX;

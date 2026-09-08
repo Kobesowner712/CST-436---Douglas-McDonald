@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 01] Sessions.unity
+    guid: b0caf3b9273cccc4cbac7cf74cc217e3
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 02] Player Spawn Identity.unity
+    guid: 8dc25e0615c641cfbf7cff02a95bbd0d
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 03] Ready State.unity
+    guid: 3eb80347181448fca8a377fbccc6c76f
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 04] Server-Assigned Spawn Positions.unity
+    guid: ae59ba7e0bb94934a2b9308a2a3316f2
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 05] Owner-Authoritative Movement.unity
+    guid: bdb0b6c07eacb9d46bba7e5bcfd2a87c
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 06] Server-Authoritative Movement.unity
+    guid: 95335285d77549b4b2b7fcb062821417
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 07] Server-Owned Ball.unity
+    guid: f6bdb19ebafd4ff8a213aa11248d2a74
+  - enabled: 1
+    path: Assets/Demos/Scenes/[Demo 08] Session State Machine.unity
+    guid: 6162f34547654cdfb2359902cb03cf3e
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
