@@ -1199,6 +1199,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8393142338813931086, guid: 0d813fa26ac4fa24889ecc38506d5edd, type: 3}
+      propertyPath: m_InScenePlaced
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8393142338813931086, guid: 0d813fa26ac4fa24889ecc38506d5edd, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2990599807
       objectReference: {fileID: 0}

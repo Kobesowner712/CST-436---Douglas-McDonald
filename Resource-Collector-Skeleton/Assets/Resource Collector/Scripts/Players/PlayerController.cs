@@ -102,6 +102,54 @@ public class PlayerController : NetworkBehaviour
         // 3. If the closest candidate is still _closestTarget, nothing changed; return.
         // 4. Otherwise, remove the old highlight, store the new candidate, and
         //    highlight it (if there is one).
+        Interactable interactable = FindClosestValidInteractable();
+        if (interactable == _closestTarget) return;
+        
+        ClearSelection();
+
+        if (interactable != null)
+        {
+            _closestTarget = interactable;
+            _closestTarget.GetComponent<Highlightable>().SetHighlighted(true);
+        }
+    }
+
+    void ClearSelection()
+    {
+        if (_closestTarget != null)
+        {
+            _closestTarget.GetComponent<Highlightable>().SetHighlighted(false);
+        }
+
+        _closestTarget = null;
+    }
+
+    Interactable FindClosestValidInteractable()
+    {
+        Collider [] candidates = Physics.OverlapSphere(transform.position, _detectionRadius, _pickupLayer);
+        Interactable closestInteractable = null;
+        float closestDistanceSqr = float.MaxValue;
+        foreach (Collider c in candidates)
+        {
+            if (!c.TryGetComponent(out Interactable interactable)) continue;
+            if (interactable.CanInteract(_heldItem.ObjectType)) continue;
+
+            Vector3 directionToInteractable = interactable.transform.position - transform.position;
+            Vector3 forward = transform.forward;
+
+            float angle = Vector3.Angle(forward, directionToInteractable.normalized);
+            if (angle > _detectionAngle) continue;
+
+            float distanceSqr = directionToInteractable.sqrMagnitude;
+            if (distanceSqr < closestDistanceSqr)
+            {
+                closestInteractable = interactable;
+                closestDistanceSqr = distanceSqr;
+            }
+
+        }
+
+        return closestInteractable;
     }
 
     [Rpc(SendTo.Server)]
