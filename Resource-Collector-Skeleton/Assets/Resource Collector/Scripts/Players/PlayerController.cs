@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,18 +11,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
-    [Header("Components")]
-    [SerializeField] CharacterController _characterController;
+    [Header("Components")] [SerializeField]
+    CharacterController _characterController;
+
     [SerializeField] Animator _animator;
     [SerializeField] PlayerHeldItem _heldItem;
 
-    [Header("Detection")]
-    [SerializeField] float _detectionRadius = 3f;
+    [Header("Detection")] [SerializeField] float _detectionRadius = 3f;
     [SerializeField] float _detectionAngle = 60f;
     [SerializeField] LayerMask _pickupLayer;
 
-    [Header("Movement")]
-    [SerializeField] float _movementSpeed = 4f;
+    [Header("Movement")] [SerializeField] float _movementSpeed = 4f;
     [SerializeField] float _rotationSpeed = 200f;
 
     Interactable _closestTarget;
@@ -47,6 +47,13 @@ public class PlayerController : NetworkBehaviour
         // TODO Slice 2.4: set the "Speed" animator float so walk speed matches input.
         _animator.SetFloat("Speed", _characterController.velocity.magnitude);
         // TODO Slice 6.2: detect a target and request interaction on E or left-click.
+
+        UpdateInteractionTarget();
+
+        if (Keyboard.current.eKey.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            HandleInteractionPressed();
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -63,6 +70,7 @@ public class PlayerController : NetworkBehaviour
         {
             // TODO Slice 5.2: turn off the current target's Highlightable,
             // then clear _closestTarget.
+            ClearSelection();
         }
 
         base.OnNetworkDespawn();
@@ -75,6 +83,9 @@ public class PlayerController : NetworkBehaviour
         // TODO Slice 6.1: if there is no target, return. Otherwise fire the
         // Animator's "Interact" trigger and send the target's NetworkObjectId
         // to the server.
+        if (!_closestTarget) return;
+        _animator.SetTrigger("Interact");
+        RequestInteractRpc(_closestTarget.NetworkObjectId);
     }
 
     static Vector2 ReadMovementInput()
@@ -85,7 +96,7 @@ public class PlayerController : NetworkBehaviour
         if (Keyboard.current.aKey.isPressed) input.x -= 1f;
         if (Keyboard.current.wKey.isPressed) input.y += 1f;
         if (Keyboard.current.sKey.isPressed) input.y -= 1f;
-        
+
         return input;
     }
 
@@ -104,13 +115,13 @@ public class PlayerController : NetworkBehaviour
         //    highlight it (if there is one).
         Interactable interactable = FindClosestValidInteractable();
         if (interactable == _closestTarget) return;
-        
+
         ClearSelection();
 
         if (interactable != null)
         {
+            interactable.GetComponent<Highlightable>().SetHighlighted(true);
             _closestTarget = interactable;
-            _closestTarget.GetComponent<Highlightable>().SetHighlighted(true);
         }
     }
 
@@ -126,26 +137,23 @@ public class PlayerController : NetworkBehaviour
 
     Interactable FindClosestValidInteractable()
     {
-        Collider [] candidates = Physics.OverlapSphere(transform.position, _detectionRadius, _pickupLayer);
+        Collider[] candidates = Physics.OverlapSphere(transform.position, _detectionRadius, _pickupLayer);
         Interactable closestInteractable = null;
         float closestDistanceSqr = float.MaxValue;
         foreach (Collider c in candidates)
         {
             if (!c.TryGetComponent(out Interactable interactable)) continue;
-            if (interactable.CanInteract(_heldItem.ObjectType)) continue;
+            if (!interactable.CanInteract(_heldItem.ObjectType)) continue;
 
-            Vector3 directionToInteractable = interactable.transform.position - transform.position;
-            Vector3 forward = transform.forward;
+            Vector3 directionToInteractable = (c.transform.position - transform.position).normalized;
+            if (Vector3.Angle(transform.forward, directionToInteractable) > _detectionAngle) continue;
 
-            float angle = Vector3.Angle(forward, directionToInteractable.normalized);
-            if (angle > _detectionAngle) continue;
+            float distance = Vector3.Distance(transform.position, c.transform.position);
 
-            float distanceSqr = directionToInteractable.sqrMagnitude;
-            if (distanceSqr < closestDistanceSqr)
-            {
-                closestInteractable = interactable;
-                closestDistanceSqr = distanceSqr;
-            }
+            if (distance > closestDistanceSqr) continue;
+
+            closestDistanceSqr = distance;
+            closestInteractable = interactable;
 
         }
 
@@ -155,8 +163,26 @@ public class PlayerController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void RequestInteractRpc(ulong networkObjectId)
     {
+        Debug.Log($"Requesting Interact on server for {networkObjectId}");
         // TODO Slice 6.3: resolve the NetworkObject id and invoke its server gateway.
         // The target may have despawned after the owner selected it.
         // Next: Slice 6.4 in Interactable.ServerInteract.
+        Dictionary<ulong, NetworkObject> spawnedObjectMap = NetworkManager.SpawnManager.SpawnedObjects;
+        if (!spawnedObjectMap.TryGetValue(networkObjectId, out NetworkObject spawnedObject))
+        {
+            Debug.LogError($"Couldn't find id: {networkObjectId}");
+            return;
+        }
+
+        if (!spawnedObject.TryGetComponent(out Interactable interactable))
+        {
+            Debug.LogError("Object doesn't have interactable");
+            return;
+        }
+
+        if (interactable.CanInteract(_heldItem.ObjectType))
+        {
+            interactable.ServerInteract(_heldItem);
+        }
     }
 }

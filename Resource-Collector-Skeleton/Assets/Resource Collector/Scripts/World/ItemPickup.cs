@@ -25,7 +25,7 @@ public class ItemPickup : Interactable
     public override bool CanInteract(ObjectType heldType)
     {
         // TODO Slice 5.3: a spawned pickup is valid to collect. </> end of Slice 5
-        return false;
+        return true;
     }
 
     protected override void Interact(PlayerHeldItem heldItem)
@@ -35,5 +35,9 @@ public class ItemPickup : Interactable
         // Next: Slice 6.6 in PlayerHeldItem.SetHeldItem.
         // TODO Slice 7.2: SpawnHeldItemAsNewPickup first so a swap returns the old type.
         // Next: Slice 7.3 in PlayerHeldItem.OnNetworkPreDespawn.
+        // heldItem.DropHeldItem(transform.position);
+        heldItem.SetHeldItem(_objectType);
+        
+        // NetworkObject.Despawn(false);
     }
 }
