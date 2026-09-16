@@ -23,33 +23,58 @@ public class Receptacle : Interactable
         base.OnNetworkSpawn();
 
         // TODO Slice 9.1: initialize on the server, subscribe, and apply current count.
+        if (IsServer)
+        {
+            _stackedCount.Value = 0;
+            _stackedCount.OnValueChanged += HandleStackedCountChanged;
+            HandleStackedCountChanged(_stackedCount.Value, _stackedCount.Value);
+        }
     }
 
     public override void OnNetworkDespawn()
     {
         // TODO Slice 9.4: unsubscribe from replicated count changes.
         base.OnNetworkDespawn();
+        _stackedCount.OnValueChanged -= HandleStackedCountChanged;
     }
 
     public override bool CanInteract(ObjectType heldType)
     {
         // TODO Slice 9.5: accept only the configured resource while space remains.
+        if (heldType == _acceptedObjectType)
+        {
+            return true;
+        }
         return false;
     }
 
     protected override void Interact(PlayerHeldItem heldItem)
     {
         // TODO Slice 9.6: add one resource and clear the player's hand. </> end of Slice 9
+        if (CanInteract(heldItem.ObjectType))
+        {
+            HandleStackedCountChanged(_stackedCount.Value, _stackedCount.Value + 1);
+            heldItem.Clear();
+            // _stackedCount.Value++;
+        }
     }
 
     void HandleStackedCountChanged(int previousValue, int newValue)
     {
         // TODO Slice 9.3: always apply newValue to the visuals. Play audio only
         // when the stack grows.
+        if (previousValue >= newValue || _stackedCount.Value >= previousValue)
+        {
+            ApplyStackedCount(newValue);
+        }
     }
 
     void ApplyStackedCount(int count)
     {
         // TODO Slice 9.2: show exactly the first count visuals.
+        for (int i = 0; i < count; i++)
+        {
+            _stackedResourceVisuals[i].gameObject.SetActive(true);
+        }
     }
 }

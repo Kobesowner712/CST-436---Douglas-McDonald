@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 /*
  * ResourceNode is a harvestable object like a tree or stone. Replicated health
@@ -24,17 +27,31 @@ public class ResourceNode : Interactable
 
         // TODO Slice 8.1: on the server, set health to _startingHealth. Then
         // subscribe to health changes and apply the current health.
+
+        if (IsServer)
+        {
+            _health.Value = _startingHealth;
+        }
+        _health.OnValueChanged += HandleHealthChanged;
+        HandleHealthChanged(_health.Value, _health.Value);
     }
+    
 
     public override void OnNetworkDespawn()
     {
         // TODO Slice 8.4: unsubscribe from replicated health changes.
         base.OnNetworkDespawn();
+        _health.OnValueChanged -= HandleHealthChanged;
+
     }
 
     public override bool CanInteract(ObjectType heldType)
     {
         // TODO Slice 8.5: require a living node and an accepted tool.
+        if (_toolTypeRequired.Contains(heldType) && _health.Value > 0)
+        {
+            return true;
+        }
         return false;
     }
 
@@ -44,21 +61,54 @@ public class ResourceNode : Interactable
         // _amountToSpawn copies of _producedPrefab with InstantiateAndSpawn.
         // Place each on the ground with a small random XZ offset and random yaw.
         // </> end of Slice 8
+        HitFeedbackRpc();
+        HandleHealthChanged(_health.Value, _health.Value - 1);
+        // _health.Value--;
+        if (_health.Value == 0)
+        {
+            for (int i = 0; i < _amountToSpawn; i++)
+            {
+                float x = transform.position.x + Random.Range(1, 5);
+                float z = transform.position.z + Random.Range(1, 5);
+                float yaw = Random.Range(1, 100);
+                Vector3 position = new Vector3(x, transform.position.y, z);
+                // Quaternion rotation = new Quaternion(transform.rotation.x, yaw, transform.position.z);
+                NetworkObject spawnedObject = NetworkObject.InstantiateAndSpawn(_producedPrefab.gameObject, NetworkManager, position: position, rotation: Quaternion.identity);
+            }
+        }
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void HitFeedbackRpc()
     {
         // TODO Slice 8.6: play the authored hit sound on each observer.
+        AudioSource.PlayClipAtPoint(_audioClip, transform.position);
     }
 
     void HandleHealthChanged(int previousValue, int newValue)
     {
         // TODO Slice 8.3: apply replicated health locally.
+        if (previousValue >= newValue && _health.Value >= previousValue)
+        {
+            _health.Value = newValue;
+            ApplyHealth();
+        }
     }
 
     void ApplyHealth()
     {
         // TODO Slice 8.2: hide depleted nodes and disable their collider.
+        if (_health.Value == 0)
+        {
+           // NetworkObject.Despawn(!NetworkObject.InScenePlaced);
+           gameObject.GetComponent<Renderer>().enabled = false;
+           gameObject.GetComponent<Collider>().enabled = false;
+           // gameObject.SetActive(false);
+        }
     }
+
+    // private void LateUpdate()
+    // {
+    //     HandleHealthChanged(_health.Value, _health.Value);
+    // }
 }

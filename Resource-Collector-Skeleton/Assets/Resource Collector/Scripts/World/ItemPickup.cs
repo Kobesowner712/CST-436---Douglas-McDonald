@@ -18,7 +18,7 @@ public class ItemPickup : Interactable
 
         // Despawn(false) leaves the GameObject active and visible. Netcode also
         // runs this callback on a late joiner's copy of a taken scene pickup.
-        if (NetworkObject.InScenePlaced == true)
+        if (NetworkObject.InScenePlaced && !NetworkManager.ShutdownInProgress)
             gameObject.SetActive(false);
     }
 
@@ -35,9 +35,9 @@ public class ItemPickup : Interactable
         // Next: Slice 6.6 in PlayerHeldItem.SetHeldItem.
         // TODO Slice 7.2: SpawnHeldItemAsNewPickup first so a swap returns the old type.
         // Next: Slice 7.3 in PlayerHeldItem.OnNetworkPreDespawn.
-        // heldItem.DropHeldItem(transform.position);
+        heldItem.DropHeldItem(transform.position);
         heldItem.SetHeldItem(_objectType);
         
-        // NetworkObject.Despawn(false);
+        NetworkObject.Despawn(!NetworkObject.InScenePlaced);
     }
 }
