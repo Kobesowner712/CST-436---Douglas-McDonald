@@ -107,8 +107,14 @@ public class ResourceNode : Interactable
         }
     }
 
-    // private void LateUpdate()
-    // {
-    //     HandleHealthChanged(_health.Value, _health.Value);
-    // }
+    private void Awake()
+    {
+
+            _health.Value = _startingHealth;
+    }
+
+    private void LateUpdate()
+    {
+            HandleHealthChanged(_health.Value, _health.Value);
+    }
 }

@@ -55,7 +55,7 @@ public class Receptacle : Interactable
         {
             HandleStackedCountChanged(_stackedCount.Value, _stackedCount.Value + 1);
             heldItem.Clear();
-            // _stackedCount.Value++;
+            _stackedCount.Value++;
         }
     }
 
@@ -76,5 +76,18 @@ public class Receptacle : Interactable
         {
             _stackedResourceVisuals[i].gameObject.SetActive(true);
         }
+    }
+    
+    private void Awake()
+    {
+        if (IsServer)
+        {
+            _stackedCount.Value = 0;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        HandleStackedCountChanged(_stackedCount.Value, _stackedCount.Value);
     }
 }
