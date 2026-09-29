@@ -99,6 +99,24 @@ public class PlayerController : MonoBehaviour
         // Next: the Slice 8.3 catch hook in ThrownAxe.AttachToHand.
 
         Vector3 start = axe.transform.position;
+        float elapsedTime = 0f;
+
+
+        while (elapsedTime < returnDuration)
+        {
+            float t = elapsedTime / returnDuration;
+
+            Vector3 p0 = start;
+            Vector3 p2 = axe.CatchPosition;
+            Vector3 p1 = (p0 + p2) * 0.5f + transform.right * bowAmount;
+
+            axe.transform.position = QuadraticBezierMath.SamplePointBernstein(p0, p1, p2, t);
+            axe.transform.Rotate(transform.forward, axe.spinSpeed * Time.deltaTime, Space.Self);
+            
+            yield return null;
+            elapsedTime += Time.deltaTime;
+        }
+        
         // TODO Slice 5.3: advance recall progress from 0 to 1 over returnDuration,
         // one step per frame, replacing the one-frame wait below.
         // The catch runs only after progress reaches 1.
@@ -116,7 +134,6 @@ public class PlayerController : MonoBehaviour
         // follow the moving hand.
         // Check: turn during recall. The axe still lands in the animated grip.
         // Next: open Demo, Slice 6.1 in Bezier/QuadraticBezierMath.cs.
-        yield return null;
 
         axe.AttachToHand();
         _axeState = AxeState.Held;
