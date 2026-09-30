@@ -15,7 +15,14 @@ public class AnimationEvents : MonoBehaviour
 
     public void ThrowAction()
     {
-        playerController.LaunchAxe();
+        if (playerController.togglePrecision == false)
+        {
+            playerController.LaunchAxe();
+        }
+        else
+        {
+            playerController.LaunchAxePrecise();
+        }
     }
 
     public void ChopAction() { }

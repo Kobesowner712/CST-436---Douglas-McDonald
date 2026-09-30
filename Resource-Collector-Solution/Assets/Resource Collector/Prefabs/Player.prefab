@@ -505,12 +505,6 @@ MonoBehaviour:
     m_Bits: 64
   _movementSpeed: 4
   _rotationSpeed: 360
-  characterController: {fileID: 4841560274559653093}
-  animator: {fileID: 637217615066948756}
-  axe: {fileID: 4346694265851622618}
-  throwImpulse: 25
-  returnDuration: 1
-  bowAmount: 0.5
 --- !u!114 &330018501001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1074,7 +1068,6 @@ Transform:
   - {fileID: 5790875462867126753}
   - {fileID: 3198261658288423369}
   - {fileID: 1351401235758572010}
-  - {fileID: 2460902165867656606}
   m_Father: {fileID: 1786789122831410079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7232859167158745953
@@ -1915,83 +1908,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 917b8ee0c2c9bf84385515b6fd3723be, type: 3}
   m_PrefabInstance: {fileID: 1978933647945666123}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2540471214520958216
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 7745727607755375033}
-    m_Modifications:
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.05999968
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.032174647
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.00000004202975
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.7071029
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.70711076
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.00000005301462
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175314477346837289, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_Name
-      value: Axe
-      objectReference: {fileID: 0}
-    - target: {fileID: 7823060221012554641, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
---- !u!4 &2460902165867656606 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 101173105130965142, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-  m_PrefabInstance: {fileID: 2540471214520958216}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4346694265851622618 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2239166956063181266, guid: 4bdff60f61e791546b1c9a95abb9975f, type: 3}
-  m_PrefabInstance: {fileID: 2540471214520958216}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7c3e1d04b8f4a6e9c2d1f0e8b7a6543, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Curves::ThrownAxe
 --- !u!1001 &3163844112054347298
 PrefabInstance:
   m_ObjectHideFlags: 0

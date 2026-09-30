@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2239166956063181266}
   m_Layer: 0
   m_Name: Axe
-  m_TagString: Untagged
+  m_TagString: Axe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -155,3 +155,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Curves::ThrownAxe
   rigidbody: {fileID: 7823060221012554641}
   axeCollider: {fileID: 2572868268265701587}
+  spinSpeed: 1000

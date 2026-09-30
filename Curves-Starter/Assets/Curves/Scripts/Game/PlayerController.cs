@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     AxeState _axeState = AxeState.Held;
     LineRenderer _lineRenderer;
 
+    public bool togglePrecision = false;
+
     void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
@@ -69,7 +71,16 @@ public class PlayerController : MonoBehaviour
 
     void UpdateAxeInput()
     {
-        if (_axeState == AxeState.Held && Mouse.current.leftButton.wasPressedThisFrame)
+        if (_axeState == AxeState.Held && Keyboard.current.leftCtrlKey.wasPressedThisFrame)
+        {
+            togglePrecision = !togglePrecision;
+        }
+        if (!togglePrecision && _axeState == AxeState.Held && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            _axeState = AxeState.Throwing;
+            animator.SetTrigger(ThrowHash);
+        }
+        else if (togglePrecision && _axeState == AxeState.Held && Mouse.current.leftButton.wasPressedThisFrame)
         {
             _axeState = AxeState.Throwing;
             animator.SetTrigger(ThrowHash);
@@ -82,13 +93,23 @@ public class PlayerController : MonoBehaviour
     public void LaunchAxe()
     {
         if (_axeState != AxeState.Throwing) return;
-
         Vector3 direction = transform.forward;
         direction.y = 0f;
         direction.Normalize();
         axe.Launch(direction, throwImpulse, characterController);
         _axeState = AxeState.Away;
     }
+    
+    public void LaunchAxePrecise()
+    {
+        if (_axeState != AxeState.Throwing) return;
+        Vector3 direction = new Vector3(Mouse.current.position.ReadValue().x, 0f, Mouse.current.position.ReadValue().y);
+        direction.y = 0f;
+        direction.Normalize();
+        axe.Launch(direction, throwImpulse, characterController);
+        _axeState = AxeState.Away;
+    }
+    
 
     IEnumerator ReturnAxe()
     {
@@ -163,6 +184,11 @@ public class PlayerController : MonoBehaviour
                 _lineRenderer.positionCount = 0;
                 break;
         }
+    }
+
+    public void CallAxeBack()
+    {
+        StartCoroutine(ReturnAxe());
     }
 
     void DrawAimLine()

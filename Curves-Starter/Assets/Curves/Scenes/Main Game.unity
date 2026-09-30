@@ -318,6 +318,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a9c44a8afab9a48829e3738ffab5bc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3007}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a9c44a8afab9a48829e3738ffab5bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3008}
   m_SourcePrefab: {fileID: 100100000, guid: f5a9c44a8afab9a48829e3738ffab5bc, type: 3}
 --- !u!4 &3002 stripped
 Transform:
@@ -351,6 +354,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 745427007670412995, guid: f5a9c44a8afab9a48829e3738ffab5bc, type: 3}
+--- !u!114 &3008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b13bf5636b1d34e9737ebdcb894d28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Curves::TreeHealth
+  health: 0
+  player: {fileID: 1781826541}
 --- !u!1001 &4001
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -414,6 +431,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c032e750fd4a00c43a49ad2c307dff3b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4007}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c032e750fd4a00c43a49ad2c307dff3b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4008}
   m_SourcePrefab: {fileID: 100100000, guid: c032e750fd4a00c43a49ad2c307dff3b, type: 3}
 --- !u!4 &4002 stripped
 Transform:
@@ -447,6 +467,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4593473096833202827, guid: c032e750fd4a00c43a49ad2c307dff3b, type: 3}
+--- !u!114 &4008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b13bf5636b1d34e9737ebdcb894d28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Curves::TreeHealth
+  health: 0
+  player: {fileID: 1781826541}
 --- !u!1001 &5001
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1110,18 +1144,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 118.5734
       objectReference: {fileID: 0}
-    - target: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
-      propertyPath: bowAmount
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
-      propertyPath: throwImpulse
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
-      propertyPath: returnDuration
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 6999358129310414010, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -13.855927
@@ -1185,6 +1207,18 @@ PrefabInstance:
     - target: {fileID: 7347594818347921774, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 109.52787
+      objectReference: {fileID: 0}
+    - target: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
+      propertyPath: bowAmount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
+      propertyPath: throwImpulse
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
+      propertyPath: returnDuration
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8172921655139685484, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1297,6 +1331,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1781826541 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8035799169309193475, guid: e8b9f61d426e84845979e0f0dc0a4ab4, type: 3}
+  m_PrefabInstance: {fileID: 579100208}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6489e58a1f3841d47a0efdde3a2500fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Curves::PlayerController
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
