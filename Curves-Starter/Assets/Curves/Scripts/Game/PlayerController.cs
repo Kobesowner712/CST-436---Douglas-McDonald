@@ -1,4 +1,5 @@
 using System.Collections;
+using Codice.Client.Commands.WkTree;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,9 @@ public class PlayerController : MonoBehaviour
     public float returnDuration = 1f;
     public float bowAmount = 0.5f;
 
+    public AudioClip axeThrow;
+    private AudioSource audioSource;
+
     enum AxeState { Held, Throwing, Away, Returning }
 
     Vector2 _smoothedInput;
@@ -34,17 +38,36 @@ public class PlayerController : MonoBehaviour
     LineRenderer _lineRenderer;
 
     public bool togglePrecision = false;
+    public Camera testCamera;
 
     void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
+        audioSource = GetComponent<AudioSource>();
     }
+
+    private Vector3 mousePos;
 
     void Update()
     {
         UpdateMovement();
         UpdateAxeInput();
         UpdateAimVisual();
+        // if (Mouse.current.leftButton.wasPressedThisFrame && _axeState == AxeState.Held) 
+        // {
+        //     // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //     // RaycastHit hit;
+        //     // if (Physics.Raycast(ray, out hit))
+        //     // {
+        //     //     if (hit.transform == this.transform)
+        //     //     {
+        //     //         Vector3 localClickPos = transform.InverseTransformPoint(hit.point);
+        //     //         mousePos = localClickPos;
+        //     //         print("Local Click Pos: " + mousePos);
+        //     //         // mousePos = Vector3.Lerp(gameObject.transform.position, localClickPos, 1);
+        //     //     }
+        //     }
+        // }
     }
 
     void UpdateMovement()
@@ -93,19 +116,46 @@ public class PlayerController : MonoBehaviour
     public void LaunchAxe()
     {
         if (_axeState != AxeState.Throwing) return;
+        audioSource.PlayOneShot(axeThrow);
         Vector3 direction = transform.forward;
         direction.y = 0f;
         direction.Normalize();
+        print("Direction Normal: " + direction);
         axe.Launch(direction, throwImpulse, characterController);
         _axeState = AxeState.Away;
     }
     
+    
     public void LaunchAxePrecise()
     {
         if (_axeState != AxeState.Throwing) return;
-        Vector3 direction = new Vector3(Mouse.current.position.ReadValue().x, 0f, Mouse.current.position.ReadValue().y);
+        audioSource.PlayOneShot(axeThrow);
+        Vector3 direction = Vector3.back;
+        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            // 2. Create a ray from the camera through the mouse screen position
+            Ray ray = testCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // 3. Cast the ray
+            if (Physics.Raycast(ray, out hit))
+            {
+                // Verify if the raycast hit *this* specific GameObject
+                // 4. Convert the world hit point into this object's local space
+                Vector3 localClickPos = transform.InverseTransformPoint(hit.point);
+                direction = localClickPos;
+                Debug.Log($"Local Click Position: {localClickPos}");
+            }
+        }
+        // Vector3 direction = Input.mousePosition;
+        
+        // direction.z = direction.y;
         direction.y = 0f;
         direction.Normalize();
+
+        print("Direction Precise: " + direction);
         axe.Launch(direction, throwImpulse, characterController);
         _axeState = AxeState.Away;
     }
@@ -114,6 +164,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator ReturnAxe()
     {
         _axeState = AxeState.Returning;
+        audioSource.PlayOneShot(axeThrow);
         axe.rigidbody.isKinematic = true;
         axe.axeCollider.enabled = false;
         // TODO Slice 8.3 (recall hook): start visual spin for the return.
@@ -157,6 +208,7 @@ public class PlayerController : MonoBehaviour
         // Next: open Demo, Slice 6.1 in Bezier/QuadraticBezierMath.cs.
 
         axe.AttachToHand();
+        animator.SetTrigger("Catch");
         _axeState = AxeState.Held;
     }
 

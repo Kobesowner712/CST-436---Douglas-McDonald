@@ -15,6 +15,8 @@ public class ThrownAxe : MonoBehaviour
     bool _stuck;
     Transform _hand;
     Vector3 _heldLocalPosition;
+    public AudioClip axeHit;
+    private AudioSource audioSource;
     Quaternion _heldLocalRotation;
 
     // TODO Slice 8.1: give Assets/Curves/Prefabs/Axe.prefab a visual child that can rotate
@@ -30,6 +32,7 @@ public class ThrownAxe : MonoBehaviour
 
     public void Launch(Vector3 direction, float impulse, CharacterController thrower)
     {
+        audioSource = GetComponent<AudioSource>();
         _hand = transform.parent;
         _heldLocalPosition = transform.localPosition;
         _heldLocalRotation = transform.localRotation;
@@ -77,6 +80,7 @@ public class ThrownAxe : MonoBehaviour
         // Recall (still a snap) and catch work after both.
         // The Launch test and the four starting-green tests still pass.
         // Next: Slice 5.1 in PlayerController.GetReturnControlPoints. </> end of Slice 4
+        audioSource.PlayOneShot(axeHit);
         rigidbody.isKinematic = true;
         // TODO Slice 8.3 (contact hook): stop visual spin while stuck.
     }
