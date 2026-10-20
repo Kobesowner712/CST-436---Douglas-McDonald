@@ -10,7 +10,7 @@ public class RoadMeshGeneratorStarter : MonoBehaviour
     private MeshRenderer _meshRenderer;
     public Material material;
 
-    public SplinePath splinePath;
+    public SplinePathTemp splinePath;
 
     public float textureRepeatLength = 2f;
 
