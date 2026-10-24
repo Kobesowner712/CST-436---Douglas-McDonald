@@ -19,6 +19,7 @@ public class TestBetterSpring : MonoBehaviour
     public float maxDisplacement;
     float _maxX, _minX;
     float _stepTime;
+    Vector3 _velocity;
 
     const float FixedStep = 1f / 120f;
 
@@ -49,6 +50,19 @@ public class TestBetterSpring : MonoBehaviour
 
         float omega = 2f * Mathf.PI * frequencyHz;
         float stiffness = mass * omega * omega;
+
+
+        float critDamping = 2f * Mathf.Sqrt(stiffness * mass);
+        float dampingCoefficient = critDamping * dampingRatio;
+
+        Vector3 displacement = attachmentTransform.position - equilibriumTransform.position;
+        Vector3 restoringForce = -stiffness * displacement;
+        Vector3 dampingForce = -dampingCoefficient * _velocity;
+
+        Vector3 acceleration = (dampingForce + restoringForce) / mass;
+        _velocity += acceleration * deltaTime;
+
+        attachmentTransform.position += _velocity * deltaTime;
 
         // attachmentTransform.position = ;
     }
